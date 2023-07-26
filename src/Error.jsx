@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Error = () => {
   return (
-    <section className="flex items-center h-full sm:p-16 dark:bg-gray-900 dark:text-gray-100">
+    <section className="flex items-center mt-20 h-full sm:p-16 dark:bg-gray-900 dark:text-gray-100">
       <div className="container flex flex-col items-center justify-center px-5 mx-auto my-8 space-y-8 text-center sm:max-w-md">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -30,15 +31,17 @@ const Error = () => {
           ></polygon>
         </svg>
         <p className="text-3xl">
-          Looks like our services are currently offline
+          Something Went Wrong
         </p>
-        <a
-          rel="noopener noreferrer"
-          href="#"
-          className="px-8 py-3 font-semibold rounded dark:bg-violet-400 dark:text-gray-900"
-        >
-          Back to homepage
-        </a>
+        <Link to={"/MakePayment"}>
+            <a
+            rel="noopener noreferrer"
+            href="#"
+            className="px-8 py-3 font-semibold rounded dark:bg-violet-400 dark:text-gray-900"
+            >
+            Back to homepage
+            </a>
+        </Link>
       </div>
     </section>
   );

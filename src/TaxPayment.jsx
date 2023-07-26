@@ -3,7 +3,7 @@ import Roles from "./Roles";
 import { Link } from "react-router-dom";
 
 const TaxPayment = () => {
-  
+
   return (
     <div>
       <Roles />
@@ -28,11 +28,9 @@ const TaxPayment = () => {
               <tbody className="bg-gray-300">
                 <tr className="border">
                   
-                    <td className="px-6 py-4 whitespace-nowrap dark:text-gray-900 text-xl font-semibold">
-                      <Link to={"/MakePayment"}>
-                        Create Tax Payment
-                      </Link>
-                    </td>
+                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-900 text-xl font-semibold">
+                      Create Tax Payment
+                  </td>
                   
                   <td className="px-6 py-4 whitespace-nowrap text-xl font-semibold">
                     <label className="relative inline-flex items-center cursor-pointer">

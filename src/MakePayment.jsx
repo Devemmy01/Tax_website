@@ -28,14 +28,14 @@ const MakePayment = () => {
       {/* <Navbar /> */}
 
       <header className="App-header mt-20">
-        <img src="src/assets/bank.png" height={200} width={200} className="mx-auto" alt="" />
+        <img src="src/Img/bank.png" height={200} width={200} className="mx-auto" alt="" />
         <h1 className="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-slate-100">Welcome To Test Bank</h1>
         <h1 className="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-slate-100">Make Payment</h1>
         {/* <TaxForm /> */}
       </header>
       <div className="container mx-auto py-8 lg:px-36">
         <form
-          className="md:bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={handleSubmit}
         >
           <div className="mb-4">

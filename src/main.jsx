@@ -27,6 +27,8 @@ import UserLevels from './UserLevels.jsx'
 import SystemUsers from './SystemUsers.jsx'
 import Reports from './Reports.jsx'
 import MakePayment from './MakePayment.jsx'
+import Success from './Success.jsx'
+import Error from './Error.jsx'
 
 const router = createBrowserRouter([
   {
@@ -108,6 +110,14 @@ const router = createBrowserRouter([
   {
     path: "/MakePayment",
     element: <MakePayment/>,
+  },
+  {
+    path: "/Success",
+    element: <Success/>,
+  },
+  {
+    path: "/Error",
+    element: <Error/>,
   },
 ]);
 
