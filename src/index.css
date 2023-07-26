@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    padding: 0%;
+    margin: 0%;
+    overflow-x: hidden;
+    font-family: 'Lato', sans-serif;
+    @apply transition-colors duration-500;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 3.4px;
+    height: 4px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+  
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #1c4e8069;
+    border-radius: 5px;
+}
+.content{
+    display: none;
+}
+.show-content{
+    display: block;
+}
+
+.progress-bar-bg {
+    fill: none;
+    stroke: #e4e4e4;
+  }
+  
+  .progress-bar {
+    fill: none;
+    stroke: #39a9db;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke-dashoffset 0.8s ease-in-out;
+  }
+  
+  .progress-text {
+    fill: #39a9db;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
