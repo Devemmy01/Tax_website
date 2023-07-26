@@ -28,7 +28,7 @@ const MakePayment = () => {
       {/* <Navbar /> */}
 
       <header className="App-header mt-20">
-        <img src="/src/bank.png" height={200} width={200} className="mx-auto" alt="" />
+        <img src="./src/bank.png" height={200} width={200} className="mx-auto" alt="" />
         <h1 className="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-slate-100">Welcome To Test Bank</h1>
         <h1 className="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-slate-100">Make Payment</h1>
         {/* <TaxForm /> */}
