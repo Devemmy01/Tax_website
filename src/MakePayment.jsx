@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 
 const MakePayment = () => {
   const [formData, setFormData] = useState({
@@ -62,8 +62,8 @@ const MakePayment = () => {
         const response = await fetch("https://api.tax.hardensoft.com.ng/api/v1/pay", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
+            "Content-Type": "application/json"
+            // "Access-Control-Allow-Origin": "*"
           },
           body: JSON.stringify(formData),
         });
