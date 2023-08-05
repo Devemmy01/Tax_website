@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 
 const MakePayment = () => {
   const [formData, setFormData] = useState({
@@ -44,6 +44,19 @@ const MakePayment = () => {
         console.error("Invalid date format");
         return;
       }
+
+    //   try {
+    //     const response = await axios.post("https://api.tax.hardensoft.com.ng/api/v1/pay", formData, {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     });
+  
+    //     console.log(response.data);
+    //   } catch (error) {
+    //     console.error("Error submitting form:", error);
+    //   }
+    // };
       
       try {
         const response = await fetch("https://api.tax.hardensoft.com.ng/api/v1/pay", {
@@ -61,6 +74,7 @@ const MakePayment = () => {
         console.error("Error submitting form:", error);
       }
     }
+    
   };
 
   return (
