@@ -1,26 +1,66 @@
-import React from "react";
 import { useState } from "react";
+// import axios from "axios";
 
 const MakePayment = () => {
   const [formData, setFormData] = useState({
-    taxpayerName: "",
-    email: '',
-    taxIdentificationNumber: "",
-    taxType: "",
+    name: "",
+    email: "",
+    tin: "",
+    tax: "",
     amount: "",
-    taxPeriod: "",
+    period: "",
     date: "",
   });
 
+  const [errors, setErrors] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const isValidDate = (dateString) => {
+    const dateObj = new Date(dateString);
+    return !isNaN(dateObj.getTime());
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here, e.g., send the data to the server or perform validation
-    console.log(formData);
+    
+    // Client-side validation
+
+    const newErrors = {};
+    if (formData.amount.trim() === ''){
+      newErrors.amount = ['The amount field is required.'];      
+    }
+    if (formData.date.trim() === ''){
+      newErrors.date = ["The date field is required."];
+    }
+    if(Object.keys(newErrors).length > 0){
+      setErrors(newErrors)
+    } else{
+      setErrors({})
+
+      if (!isValidDate(formData.date)) {
+        console.error("Invalid date format");
+        return;
+      }
+      
+      try {
+        const response = await fetch("https://api.tax.hardensoft.com.ng/api/v1/pay", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        const data = await response.json();
+        console.log(data);
+      } 
+      catch (error) {
+        console.error("Error submitting form:", error);
+      }
+    }
   };
 
   return (
@@ -36,8 +76,8 @@ const MakePayment = () => {
       </header>
       <div className="container mx-auto py-8 lg:px-36">
         <form
+        onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-          onSubmit={handleSubmit}
         >
           <div className="mb-4">
             <label
@@ -49,9 +89,9 @@ const MakePayment = () => {
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
-              name="taxpayerName"
-              id="taxpayerName"
-              value={formData.taxpayerName}
+              name="name"
+              id="name"
+              value={formData.name}
               onChange={handleChange}
               placeholder="Enter Tax Payer Name"
             />
@@ -80,9 +120,9 @@ const MakePayment = () => {
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
-              name="taxIdentificationNumber"
-              id="taxIdentificationNumber"
-              value={formData.taxIdentificationNumber}
+              name="tin"
+              id="tin"
+              value={formData.tin}
               onChange={handleChange}
               placeholder="Enter TIN"
             />
@@ -96,9 +136,9 @@ const MakePayment = () => {
             </label>
             <select
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              name="taxType"
-              id="taxType"
-              value={formData.taxType}
+              name="tax"
+              id="tax"
+              value={formData.tax}
               onChange={handleChange}
             >
               <option value="">Select Tax Type</option>
@@ -124,6 +164,9 @@ const MakePayment = () => {
               onChange={handleChange}
               placeholder="Enter Amount"
             />
+            {errors.amount && errors.amount.map((error, index) => (
+              <p key={index} className="text-red-600">{error}</p>
+            ))}
           </div>
           <div className="mb-4">
             <label
@@ -135,9 +178,9 @@ const MakePayment = () => {
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
-              name="taxPeriod"
-              id="taxPeriod"
-              value={formData.taxPeriod}
+              name="period"
+              id="period"
+              value={formData.period}
               onChange={handleChange}
               placeholder="Enter Tax Period"
             />
@@ -151,17 +194,21 @@ const MakePayment = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="date"
+              type="text"
               name="date"
               id="date"
               value={formData.date}
               onChange={handleChange}
             />
+            {errors.date && errors.date.map((error, index) => (
+              <p key={index} className="text-red-600">{error}</p>
+            ))}
           </div>
           <div className="flex items-center justify-between">
             <button
               className="bg-[#1C4E80] hover:bg-[#1c4e807a] w-full transition-all text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
+              // onClick={handleSubmit}
             >
               Submit
             </button>
