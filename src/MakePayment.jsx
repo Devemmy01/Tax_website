@@ -2,20 +2,16 @@ import { useState, useEffect } from "react";
 
 const MakePayment = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    tin: "",
-    tax: "",
-    amount: "",
-    period: "",
-    date: "",
+    name: "Test Name",
+    tin: "123456780",
+    tax: "Income tax",
+    amount: "25000",
+    period: "6 months",
+    date: "2023-07-24",
+    email: "hardensoftdevteam@gmail.com",
   });
 
   const [errors, setErrors] = useState({});
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   const isValidDate = (dateString) => {
     const dateObj = new Date(dateString);
@@ -44,51 +40,25 @@ const MakePayment = () => {
         return;
       }
 
-      // Convert the date to the expected format (e.g., "YYYY-MM-DD")
-      const formattedDate = new Date(formData.date).toISOString().split("T")[0];
-
-      // Create the FormData object
-      const form = new FormData();
-      form.append("name", formData.name);
-      form.append("tin", formData.tin);
-      form.append("tax", formData.tax);
-      form.append("amount", formData.amount);
-      form.append("period", formData.period);
-      form.append("date", formattedDate); // Use the formatted date here
-      form.append("email", formData.email);
-
-      // Make the AJAX request
-      try {
-        const response = await fetch(
-          "https://api.tax.hardensoft.com.ng/api/v1/pay",
-          {
-            method: "POST",
-            body: form, // Use the FormData object as the body
-          }
-        );
-
-        if (!response.ok) {
-          console.error(
-            "Error submitting form:",
-            response.status,
-            response.statusText
-          );
-          // If there's a response body, log it as well
-          try {
-            const responseBody = await response.json();
-            console.log("Response body:", responseBody);
-          } catch (error) {
-            console.error("Failed to parse response body as JSON:", error);
-          }
-          return;
-        }
-
-        const data = await response.json();
-        console.log(data);
-      } catch (error) {
-        console.error("Error submitting form:", error);
-      }
+      fetch("https://api.tax.hardensoft.com.ng/api/v1/pay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("Error sending request:", error);
+        });
     }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
