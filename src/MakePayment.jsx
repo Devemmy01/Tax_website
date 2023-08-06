@@ -1,5 +1,4 @@
-import { useState } from "react";
-// import axios from "axios";
+import { useState, useEffect } from "react";
 
 const MakePayment = () => {
   const [formData, setFormData] = useState({
@@ -25,57 +24,71 @@ const MakePayment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Client-side validation
 
     const newErrors = {};
-    if (formData.amount.trim() === ''){
-      newErrors.amount = ['The amount field is required.'];      
+    if (formData.amount.trim() === "") {
+      newErrors.amount = ["The amount field is required."];
     }
-    if (formData.date.trim() === ''){
+    if (formData.date.trim() === "") {
       newErrors.date = ["The date field is required."];
     }
-    if(Object.keys(newErrors).length > 0){
-      setErrors(newErrors)
-    } else{
-      setErrors({})
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      setErrors({});
 
       if (!isValidDate(formData.date)) {
         console.error("Invalid date format");
         return;
       }
 
-    //   try {
-    //     const response = await axios.post("https://api.tax.hardensoft.com.ng/api/v1/pay", formData, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     });
-  
-    //     console.log(response.data);
-    //   } catch (error) {
-    //     console.error("Error submitting form:", error);
-    //   }
-    // };
-      
+      // Convert the date to the expected format (e.g., "YYYY-MM-DD")
+      const formattedDate = new Date(formData.date).toISOString().split("T")[0];
+
+      // Create the FormData object
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("tin", formData.tin);
+      form.append("tax", formData.tax);
+      form.append("amount", formData.amount);
+      form.append("period", formData.period);
+      form.append("date", formattedDate); // Use the formatted date here
+      form.append("email", formData.email);
+
+      // Make the AJAX request
       try {
-        const response = await fetch("https://api.tax.hardensoft.com.ng/api/v1/pay", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-            // "Access-Control-Allow-Origin": "*"
-          },
-          body: JSON.stringify(formData),
-        });
-  
+        const response = await fetch(
+          "https://api.tax.hardensoft.com.ng/api/v1/pay",
+          {
+            method: "POST",
+            body: form, // Use the FormData object as the body
+          }
+        );
+
+        if (!response.ok) {
+          console.error(
+            "Error submitting form:",
+            response.status,
+            response.statusText
+          );
+          // If there's a response body, log it as well
+          try {
+            const responseBody = await response.json();
+            console.log("Response body:", responseBody);
+          } catch (error) {
+            console.error("Failed to parse response body as JSON:", error);
+          }
+          return;
+        }
+
         const data = await response.json();
         console.log(data);
-      } 
-      catch (error) {
+      } catch (error) {
         console.error("Error submitting form:", error);
       }
     }
-    
   };
 
   return (
@@ -85,13 +98,17 @@ const MakePayment = () => {
       <header className="App-header mt-20">
         {/* <img src="./src/bank.png" height={200} width={200} className="mx-auto" alt="" /> */}
         <i className="bx bxs-bank flex items-center justify-center text-9xl text-[#1C4E80]"></i>
-        <h1 className="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-slate-100">Welcome To Test Bank</h1>
-        <h1 className="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-slate-100">Make Payment</h1>
+        <h1 className="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-slate-100">
+          Welcome To Test Bank
+        </h1>
+        <h1 className="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-slate-100">
+          Make Payment
+        </h1>
         {/* <TaxForm /> */}
       </header>
       <div className="container mx-auto py-8 lg:px-36">
         <form
-        onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
           <div className="mb-4">
@@ -112,19 +129,22 @@ const MakePayment = () => {
             />
           </div>
           <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter Email Address"
-          />
-        </div>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="email"
+              name="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter Email Address"
+            />
+          </div>
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -179,9 +199,12 @@ const MakePayment = () => {
               onChange={handleChange}
               placeholder="Enter Amount"
             />
-            {errors.amount && errors.amount.map((error, index) => (
-              <p key={index} className="text-red-600">{error}</p>
-            ))}
+            {errors.amount &&
+              errors.amount.map((error, index) => (
+                <p key={index} className="text-red-600">
+                  {error}
+                </p>
+              ))}
           </div>
           <div className="mb-4">
             <label
@@ -209,15 +232,18 @@ const MakePayment = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
+              type="date"
               name="date"
               id="date"
               value={formData.date}
               onChange={handleChange}
             />
-            {errors.date && errors.date.map((error, index) => (
-              <p key={index} className="text-red-600">{error}</p>
-            ))}
+            {errors.date &&
+              errors.date.map((error, index) => (
+                <p key={index} className="text-red-600">
+                  {error}
+                </p>
+              ))}
           </div>
           <div className="flex items-center justify-between">
             <button
