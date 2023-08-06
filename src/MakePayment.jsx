@@ -40,20 +40,30 @@ const MakePayment = () => {
         return;
       }
 
-      fetch("https://api.tax.hardensoft.com.ng/api/v1/pay", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((error) => {
-          console.error("Error sending request:", error);
+      try {
+        const response = await fetch("https://api.tax.hardensoft.com.ng/api/v1/pay", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         });
+  
+        if (!response.ok) {
+          throw new Error(`Request failed with status: ${response.status}`);
+        }
+  
+        // Check if the response is in JSON format
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          console.log(data);
+        } else {
+          console.error("Response is not in JSON format");
+        }
+      } catch (error) {
+        console.error("Error sending request:", error.message);
+      }
     }
   };
 
