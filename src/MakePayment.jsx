@@ -1,4 +1,16 @@
 import { useState, useEffect } from "react";
+import Modal from "react-modal"
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
 
 const MakePayment = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +23,8 @@ const MakePayment = () => {
     email: "hardensoftdevteam@gmail.com",
   });
 
+  const [serverResponse, setServerResponse] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState({});
 
   const isValidDate = (dateString) => {
@@ -58,6 +72,12 @@ const MakePayment = () => {
         if (contentType && contentType.includes("application/json")) {
           const data = await response.json();
           console.log(data);
+  
+          // Set the server response in the state
+          setServerResponse(data);
+  
+          // Open the modal to display the response
+          setIsModalOpen(true);
         } else {
           console.error("Response is not in JSON format");
         }
@@ -67,6 +87,11 @@ const MakePayment = () => {
     }
   };
 
+  // Function to close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -74,6 +99,34 @@ const MakePayment = () => {
   return (
     <div>
       {/* <Navbar /> */}
+
+      <Modal
+        // className="w-full"
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Server Response"
+      >
+        <div className="flex items-center justify-center">
+          {/* <h2>Server Response</h2> */}
+          {serverResponse && (
+            <div className="flex flex-col text-center gap-6 mt-16">
+              {/* <p>Status: {serverResponse.status}</p> */}
+              {/* <p>Message: {serverResponse.message}</p> */}
+              <p className="text-xl font-bold">Click here to proceed your payment</p>
+              <p>
+                {/* Data:{" "} */} 
+                <button className="bg-[#1C4E80] text-white p-3 text-xl rounded-lg">
+                  <a href={serverResponse.data} target="_blank" rel="noopener noreferrer">
+                    {/* {serverResponse.data} */} Proceed
+                  </a>
+                </button>
+              </p>
+            </div>
+          )}
+          <button onClick={closeModal}><i className='bx bx-x absolute text-2xl top-5 right-6'></i></button>
+        </div>
+      </Modal>
 
       <header className="App-header mt-20">
         {/* <img src="./src/bank.png" height={200} width={200} className="mx-auto" alt="" /> */}
